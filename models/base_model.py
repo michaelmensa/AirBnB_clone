@@ -3,17 +3,29 @@
 '''this module represents the base model'''
 
 import uuid
-from datetime import datetime
+from datetime import date, datetime
 
 
 class BaseModel():
     '''this represents the basemodel class'''
 
-    def __init__(self, id=None, created_at=None, updated_at=None):
-        '''this method initializes the basemodel class'''
+    '''def __init__(self, id=None, created_at=None, updated_at=None):
+        this method initializes the basemodel class
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+        self.updated_at = datetime.now()'''
+
+    def __init__(self, *args, **kwargs):
+        '''this constructor is an updated version'''
+        if kwargs is not None:
+            self.__dict__ = kwargs
+            time_format = '%Y-%m-%dT%H:%M:%S.%f'
+            self.created_at = datetime.strptime(self.created_at, time_format)
+            self.updated_at = datetime.strptime(self.updated_at, time_format)
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
 
     def __str__(self):
         '''this method defines the string representation of the basemodel'''
