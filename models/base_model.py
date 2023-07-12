@@ -17,11 +17,14 @@ class BaseModel():
 
     def __init__(self, *args, **kwargs):
         '''this constructor is an updated version'''
-        if kwargs is not None:
+        if len(kwargs) != 0:
             self.__dict__ = kwargs
             time_format = '%Y-%m-%dT%H:%M:%S.%f'
             self.created_at = datetime.strptime(self.created_at, time_format)
             self.updated_at = datetime.strptime(self.updated_at, time_format)
+            ''' for key, value in kwargs.items():
+                if key == "created_at" or key == "updated_at":
+                    value = datetime.strptime(value, time_format)'''
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
