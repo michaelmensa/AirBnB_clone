@@ -3,7 +3,7 @@
 '''this module represents the base model'''
 
 import uuid
-from datetime import date, datetime
+from datetime import datetime
 
 
 class BaseModel():
@@ -17,11 +17,16 @@ class BaseModel():
 
     def __init__(self, *args, **kwargs):
         '''this constructor is an updated version'''
+        format_time = '%Y-%m-%dT%H:%M:%S.%f'
         if kwargs is not None:
-            self.__dict__ = kwargs
-            time_format = '%Y-%m-%dT%H:%M:%S.%f'
-            self.created_at = datetime.strptime(self.created_at, time_format)
-            self.updated_at = datetime.strptime(self.updated_at, time_format)
+            self.__dict = kwargs
+            for key, value in kwargs.items():
+                setattr(self, key, value)
+            if kwargs.get("created_at", None) and type("self.created_at") is str:
+                self.created_at = datetime.strptime(kwargs["created_at"], format_time)
+            if kwargs.get("updated_at", None) and type("self.updated_at") is str:
+                self.updated_at = datetime.strptime(kwargs["updated_at"], format_time)
+
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
