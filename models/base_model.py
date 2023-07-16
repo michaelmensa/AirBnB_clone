@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 
-'''this module represents the base model'''
-
 import uuid
 from datetime import datetime
 import models
 
 
-class BaseModel():
+'''this module represents the base model'''
+
+class BaseModel:
     '''this represents the basemodel class'''
 
     '''def __init__(self, id=None, created_at=None, updated_at=None):
