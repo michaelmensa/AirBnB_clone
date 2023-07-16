@@ -53,5 +53,5 @@ class FileStorage:
                 for key, value in new_objects.items():
                     reloaded_obj = eval('{}(**value)'.format(value['__class__']))
                     self.__objects[key] = reloaded_obj
-        except (IOError):
+        except (IOError, json.JSONDecodeError):
             pass
