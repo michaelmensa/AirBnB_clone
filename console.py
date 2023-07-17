@@ -11,7 +11,7 @@ class HBNBCommand(cmd.Cmd):
     ''' this class represents the Console
     '''
 
-    prompt = ' (hbnb) '
+    prompt = '(hbnb) '
 
     def do_EOF(self, line):
         ''' method for EOF'''
