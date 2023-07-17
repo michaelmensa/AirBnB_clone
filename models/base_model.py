@@ -5,7 +5,7 @@ from datetime import datetime
 import models
 
 
-'''this module represents the base model'''
+'''This module represents the base model'''
 
 
 class BaseModel():
