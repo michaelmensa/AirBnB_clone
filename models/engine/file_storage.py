@@ -50,8 +50,7 @@ class FileStorage():
             with open(self.__file_path, mode='r', encoding='utf-8') as f:
                 new_objects = json.load(f)
                 for key, value in new_objects.items():
-                    reloaded_obj = eval('{}(**value)'.format(value['__\n
-                    class__']))
+                    reloaded_obj = eval('{}(**value)'.format(value['__class__']))
                     self.__objects[key] = reloaded_obj
         except (IOError, json.JSONDecodeError):
             pass
