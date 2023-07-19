@@ -5,9 +5,10 @@ from datetime import datetime
 import models
 
 
-'''this module represents the base model'''
+'''This module represents the base model'''
 
-class BaseModel:
+
+class BaseModel():
     '''this represents the basemodel class'''
 
     def __init__(self, *args, **kwargs):
