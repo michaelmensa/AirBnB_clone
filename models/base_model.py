@@ -27,7 +27,8 @@ class BaseModel():
 
     def __str__(self):
         '''this method defines the string representation of the basemodel'''
-        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
+        return "[{}] ({}) {}".format(self.__class__.__name__, self.id,
+                                     self.__dict__)
 
     def save(self):
         '''this method updates updated_at with current datetime'''
