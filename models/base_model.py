@@ -2,7 +2,7 @@
 
 import uuid
 from datetime import datetime
-import models
+from models import storage
 
 
 '''This module represents the base model'''
@@ -14,31 +14,34 @@ class BaseModel():
     def __init__(self, *args, **kwargs):
         '''this constructor is an updated version'''
 
-        if len(kwargs) != 0:
-            self.__dict__ = kwargs
-            time_format = '%Y-%m-%dT%H:%M:%S.%f'
-            self.created_at = datetime.strptime(self.created_at, time_format)
-            self.updated_at = datetime.strptime(self.updated_at, time_format)
-        else:
+        time_format = '%Y-%m-%dT%H:%M:%S.%f'
+        if not kwargs and kwargs == {}:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-            models.storage.new(self)
+            storage.new(self)
+        else:
+            for k, v in kwargs.items():
+                if k == 'created_at' or k == 'update_at':
+                    v = datetime.strptime(v, time_format)
+                    if k != "__class__":
+                        setattr(self, k, v)
 
     def __str__(self):
         '''this method defines the string representation of the basemodel'''
-        return "[{}] ({}) {}".format(self.__class__.__name__, self.id,
-                                     self.__dict__)
+        obj_dict = self.__dict__.copy()
+        return "[{}] ({}) {}".format(type(self).__name__, self.id, obj_dict)
 
     def save(self):
         '''this method updates updated_at with current datetime'''
         self.updated_at = datetime.now()
-        models.storage.save()
+        storage.save()
 
     def to_dict(self):
         '''this method returns a dictionary containing all keys/values'''
-        my_dict = self.__dict__
-        my_dict["__class__"] = self.__class__.__name__
-        my_dict["created_at"] = self.created_at.isoformat()
-        my_dict["updated_at"] = self.updated_at.isoformat()
-        return my_dict
+        obj_dict = self.__dict__.copy()
+        obj_dict['__class__'] = str(type(self).__name__)
+        obj_dict['created_at'] = self.created_at.isoformat()
+        obj_dict['updated_at'] = self.updated_at.isoformat()
+
+        return (obj_dict)

@@ -7,8 +7,6 @@ Module for file storage
 
 
 import json
-from models.base_model import BaseModel
-
 
 class FileStorage():
     '''
@@ -29,29 +27,40 @@ class FileStorage():
         ''' this public instance method sets in __objects the obj with key
         <obj class name>.id
         '''
-        self.__objects["{}.{}".format(obj.__class__.__name__, obj.id)] = obj
+        key = f'{type(obj).__name__}.{obj.id}'
+        self.__objects[key] = obj
 
     def save(self):
         ''' this public instance method serializes __objects to a JSON
         file(path:__file_path)
         '''
 
-        new_dict = {}
-        with open(self.__file_path, mode='w+', encoding='utf-8') as f:
-            for key, value in self.__objects.items():
-                new_dict[key] = value.to_dict()
-                json.dump(new_dict, f)
+        filename = self.__file_path
+        with open(filename, 'w') as json_file:
+            d = {k: v.to_dict() for k, v in self.__objects.items()}
+            json.dump(d, json_file)
 
     def reload(self):
+
         '''
         this public instance method deserializes the JSON file to __objects
         '''
+        from models.base_model import BaseModel
+        from models.user import User
+        from models.place import Place
+        from models.city import City
+        from models.amenity import Amenity
+        from models.state import State
+        from models.review import Review
 
+        filename = self.__file_path
+        class_map = {'BaseModel': BaseModel, 'User': User,
+                     'Place': Place, 'State': State,
+                     'City': City, 'Amenity': Amenity, 
+                     'Review': Review}
         try:
-            with open(self.__file_path, mode='r', encoding='utf-8') as f:
-                new_objects = json.load(f)
-                for key, value in new_objects.items():
-                    reload_obj = eval('{}(**value)'.format(value['__class__']))
-                    self.__objects[key] = reload_obj
-        except (IOError, json.JSONDecodeError):
+            with open(filename, 'r') as json_file:
+                for obj in json.load(json_file).values():
+                    self.new(class_map[obj['__class__']](**obj))
+        except FileNotFoundError:
             pass
